@@ -1,0 +1,6 @@
+21/07/23 21:31:10 INFO TaskSetManager: Starting task 0.0 in stage 0.0 (TID 0, 192.168.43.222, executor driver, partition 0, PROCESS_LOCAL, 7274 bytes)
+21/07/23 21:31:10 INFO TaskSetManager: Starting task 1.0 in stage 0.0 (TID 1, 192.168.43.222, executor driver, partition 1, PROCESS_LOCAL, 7278 bytes)
+21/07/23 21:31:10 INFO TaskSetManager: Starting task 2.0 in stage 0.0 (TID 2, 192.168.43.222, executor driver, partition 2, PROCESS_LOCAL, 7278 bytes)
+21/07/23 21:31:10 INFO TaskSetManager: Starting task 3.0 in stage 0.0 (TID 3, 192.168.43.222, executor driver, partition 3, PROCESS_LOCAL, 7274 bytes)
+21/07/23 21:31:10 INFO TaskSetManager: Starting task 4.0 in stage 0.0 (TID 4, 192.168.43.222, executor driver, partition 4, PROCESS_LOCAL, 7278 bytes)
+21/07/23 21:31:10 INFO TaskSetManager: Starting task 5.0 in stage 0.0 (TID 5, 192.168.43.222, executor driver, partition 5, PROCESS_LOCAL, 7278 bytes)
