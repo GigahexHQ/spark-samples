@@ -8,9 +8,11 @@ lazy val sample = (project in file("."))
     name := "spark-scala-samples",
     moduleName := "spark-samples",
     libraryDependencies ++= Seq(
-      "org.apache.spark" %% "spark-core" % "3.0.0" ,
-      "org.apache.spark" %% "spark-sql" % "3.0.0"
-
+      "org.apache.spark" %% "spark-core" % "3.2.0" ,
+      "org.apache.spark" %% "spark-sql" % "3.2.0",
+      "org.apache.hadoop" % "hadoop-common" % "3.3.1",
+      "org.apache.hadoop" % "hadoop-aws" % "3.3.1",
+      "org.typelevel" %% "frameless-dataset"  % "0.10.1"
     )
   )
 
@@ -21,8 +23,6 @@ lazy val projectSettings = baseSettings ++ buildSettings ++  Seq(
 lazy val buildSettings = Seq(
   version := releaseVersion,
   scalaVersion := "2.12.6",
-  //crossScalaVersions := Seq("2.11.12", "2.12.6"),
-  //assemblyOutputPath in assembly := file(s"${baseDirectory.value.getAbsolutePath}/target/${moduleName.value}.jar"),
   assemblyJarName in assembly := s"${moduleName.value}.jar",
   assemblyMergeStrategy in assembly := {
     case PathList(ps @ _*) if ps.last endsWith ".html" => MergeStrategy.first
@@ -49,7 +49,7 @@ lazy val baseSettings = Seq(
     Resolver.sonatypeRepo("snapshots")
   ),
   scalaCompilerOptions,
-  javacOptions in (Compile, compile) ++= Seq("-source", "1.8", "-target", "1.8", "-Xlint:unchecked")
+  javacOptions in (Compile, compile) ++= Seq("-source", "11")
 )
 lazy val scalaCompilerOptions = scalacOptions ++= Seq(
   "-deprecation",
