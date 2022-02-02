@@ -1,27 +1,6 @@
-import Dependencies._
-
-val releaseVersion = "0.1.0-SNAPSHOT"
-
-lazy val sample = (project in file("."))
-  .settings(projectSettings)
-  .settings(
-    name := "spark-scala-samples",
-    moduleName := "spark-samples",
-    libraryDependencies ++= Seq(
-      "org.apache.spark" %% "spark-core" % "3.2.0" ,
-      "org.apache.spark" %% "spark-sql" % "3.2.0",
-      "org.apache.hadoop" % "hadoop-common" % "3.3.1",
-      "org.apache.hadoop" % "hadoop-aws" % "3.3.1",
-      "org.typelevel" %% "frameless-dataset"  % "0.10.1"
-    )
-  )
-
-lazy val projectSettings = baseSettings ++ buildSettings ++  Seq(
-  organization := "com.gigahex"
-)
-
 lazy val buildSettings = Seq(
-  version := releaseVersion,
+  organization := "com.gigahex",
+  version := "0.1.0-SNAPSHOT",
   scalaVersion := "2.12.6",
   assemblyJarName in assembly := s"${moduleName.value}.jar",
   assemblyMergeStrategy in assembly := {
@@ -36,31 +15,23 @@ lazy val buildSettings = Seq(
       val oldStrategy = (assemblyMergeStrategy in assembly).value
       oldStrategy(x)
   },
-  scalaModuleInfo := scalaModuleInfo.value.map(_.withOverrideScalaVersion(true)),
   fork in Test := true
 )
-lazy val baseSettings = Seq(
-  libraryDependencies ++= Seq(
-    "org.mockito" % "mockito-core" %  versions.mockito % Test,
-    "org.scalatest" %% "scalatest" %  versions.scalaTest % Test
-  ),
-  resolvers ++= Seq(
-    Resolver.sonatypeRepo("releases"),
-    Resolver.sonatypeRepo("snapshots")
-  ),
-  scalaCompilerOptions,
-  javacOptions in (Compile, compile) ++= Seq("-source", "11")
-)
-lazy val scalaCompilerOptions = scalacOptions ++= Seq(
-  "-deprecation",
-  "-encoding", "UTF-8",
-  "-feature",
-  "-language:existentials",
-  "-language:higherKinds",
-  "-language:implicitConversions",
-  "-unchecked",
-  "-Ywarn-dead-code",
-  "-Ywarn-numeric-widen",
-  "-Xlint",
-  "-Ywarn-unused-import"
-)
+
+lazy val sample = (project in file("."))
+  .settings(buildSettings)
+  .settings(
+    name := "spark-samples",
+    moduleName := "spark-samples",
+    libraryDependencies ++= Seq(
+      "org.apache.spark" %% "spark-core" % "3.2.0" ,
+      "org.apache.spark" %% "spark-sql" % "3.2.0",
+      "org.apache.hadoop" % "hadoop-common" % "3.3.1",
+      "org.apache.hadoop" % "hadoop-aws" % "3.3.1",
+      "org.typelevel" %% "frameless-dataset"  % "0.10.1"
+    )
+  )
+
+
+
+

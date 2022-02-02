@@ -85,12 +85,13 @@ fabric.properties
 .idea/
 
 # Reason: https://github.com/joeblau/gitignore.io/issues/186#issuecomment-249601023
-
+venv/
 *.iml
 modules.xml
 .idea/misc.xml
 *.ipr
-
+dependency-reduced-pom.xml
+.DS_Store
 # Sonarlint plugin
 .idea/sonarlint
 
