@@ -14,10 +14,10 @@ object HelloWord {
       .getOrCreate()
     import spark.implicits._
 
-    val text = spark.read.textFile("")
+    val text = spark.read.textFile("/path/to/hello.in")
     val words = text.flatMap(x => x.split(" "))
     val largeWords = words.filter(w => w.length > 2)
-    largeWords.write.text("/path/to/large-words")
+    largeWords.write.text("/path/to/large-words-scala")
 
     spark.stop()
   }

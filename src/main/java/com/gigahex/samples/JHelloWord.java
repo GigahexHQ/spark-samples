@@ -17,7 +17,7 @@ public class JHelloWord {
                 .getOrCreate();
 
         //Create a dataset by reading the input file
-        Dataset<String> text = spark.read().textFile("/Users/shad/hello.in");
+        Dataset<String> text = spark.read().textFile("/path/to/hello.in");
         Dataset<String> words = text
                 .flatMap((FlatMapFunction<String, String>) s -> Arrays.asList(s.split(" "))
                                 .iterator(),
@@ -25,7 +25,7 @@ public class JHelloWord {
                 );
 
         words.filter((FilterFunction<String>) word -> word.length() > 2)
-                .write().text("/Users/shad/hello-jout");
+                .write().text("/path/to/large-out-java");
         spark.stop();
     }
 
