@@ -24,10 +24,12 @@ lazy val sample = (project in file("."))
     name := "spark-samples",
     moduleName := "spark-samples",
     libraryDependencies ++= Seq(
-      "org.apache.spark" %% "spark-core" % "3.2.0" ,
-      "org.apache.spark" %% "spark-sql" % "3.2.0",
-      "org.apache.hadoop" % "hadoop-common" % "3.3.1",
-      "org.apache.hadoop" % "hadoop-aws" % "3.3.1",
+      "org.apache.spark" %% "spark-core" % "3.2.0" % "compile",
+      "org.apache.spark" %% "spark-sql" % "3.2.0" % "compile",
+      "org.apache.hadoop" % "hadoop-common" % "3.3.1" % "provided",
+      "org.apache.hadoop" % "hadoop-aws" % "3.3.1" % "provided",
+      "nl.basjes.parse.useragent" % "yauaa" % "6.8",
+      "org.apache.logging.log4j" % "log4j-api" % "2.17.1",
       "org.typelevel" %% "frameless-dataset"  % "0.10.1"
     )
   )

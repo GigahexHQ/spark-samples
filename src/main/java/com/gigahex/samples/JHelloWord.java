@@ -14,6 +14,7 @@ public class JHelloWord {
         //Initialize the spark session
         SparkSession spark = SparkSession.builder()
                 .appName("count-words-java")
+                .config("spark.scheduler.mode", "FAIR")
                 .getOrCreate();
 
         //Create a dataset by reading the input file
