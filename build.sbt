@@ -29,8 +29,8 @@ lazy val sample = (project in file("."))
       "org.apache.hadoop" % "hadoop-common" % "3.3.1" % "provided",
       "org.apache.hadoop" % "hadoop-aws" % "3.3.1" % "provided",
       "nl.basjes.parse.useragent" % "yauaa" % "6.8",
-      "org.apache.logging.log4j" % "log4j-api" % "2.17.1",
-      "org.typelevel" %% "frameless-dataset"  % "0.10.1"
+      "org.apache.logging.log4j" % "log4j-api" % "2.17.1"
+
     )
   )
 

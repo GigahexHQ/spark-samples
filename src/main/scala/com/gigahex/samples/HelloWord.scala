@@ -18,7 +18,7 @@ object HelloWord {
       .getOrCreate()
     import spark.implicits._
 
-    val text = spark.read.textFile("/Users/gigahex/hello.in")
+    val text = spark.read.textFile("/users/gigahex/hello.in")
     val words = text.flatMap(x => x.split(" "))
     val largeWords = words.filter(w => w.length > 2)
     val outputPath = s"/Users/gigahex/large-words-scala/${System.currentTimeMillis()}"

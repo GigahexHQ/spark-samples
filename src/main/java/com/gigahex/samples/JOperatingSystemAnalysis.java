@@ -13,11 +13,11 @@ import org.apache.spark.sql.types.StructType;
 import scala.Tuple3;
 import scala.Tuple4;
 
-import static org.apache.spark.sql.functions.*;
 import java.io.IOException;
 
+import static org.apache.spark.sql.functions.desc;
 
-public class JDeviceAnalysis {
+public class JOperatingSystemAnalysis {
 
     static Row getDeviceInfo(Row row) throws IOException {
         UserAgentAnalyzer uaa = UserAgentAnalyzer
@@ -52,22 +52,22 @@ public class JDeviceAnalysis {
         ExpressionEncoder<Row> encoder = RowEncoder.apply(structDevice);
 
         StructType statsStruct = new StructType();
-        statsStruct = statsStruct.add("browser", DataTypes.StringType, false);
+        statsStruct = statsStruct.add("Operating System", DataTypes.StringType, false);
         statsStruct = statsStruct.add("users", DataTypes.LongType, false);
         statsStruct = statsStruct.add("% Users", DataTypes.DoubleType, false);
         ExpressionEncoder<Row> encoderStats = RowEncoder.apply(statsStruct);
 
 
         //Create a dataset by reading the input file
-        Dataset<Row> websiteLogs = spark.read().json("/Users/shad/logs_devices.json");
+        Dataset<Row> websiteLogs = spark.read().json("hdfs://0.0.0.0:9075/user/gigahex/logs_devices.json");
         Dataset<Row> withDevices = websiteLogs.map((MapFunction<Row, Row>) row -> getDeviceInfo(row), encoder);
 
         Long total = websiteLogs.count();
 
-        Dataset<Row> stats = withDevices.groupBy("browser")
+        Dataset<Row> stats = withDevices.groupBy("os")
                 .count()
                 .map((MapFunction<Row, Row>) row -> Row.fromTuple(new Tuple3<String, Long, Double>(
-                        row.getAs("browser"),
+                        row.getAs("os"),
                         row.getAs("count"),
                         (row.<Long>getAs("count").doubleValue() / total) * 100)), encoderStats)
                 .orderBy(desc("users"));
