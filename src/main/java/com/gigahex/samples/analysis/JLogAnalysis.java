@@ -1,4 +1,4 @@
-package com.gigahex.samples;
+package com.gigahex.samples.analysis;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;

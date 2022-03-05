@@ -1,12 +1,11 @@
-package com.gigahex.samples
+package com.gigahex.samples.analytics
 
-import org.apache.spark.sql.SparkSession
 import nl.basjes.parse.useragent.UserAgentAnalyzer
 import org.apache.spark.sql._
 import org.apache.spark.sql.functions.desc
 
 
-object OSAnalysis {
+object DeviceAnalysis {
 
   def getDeviceInfo(row: Row): (String, String, String, String) = {
     val uaa = UserAgentAnalyzer
@@ -37,17 +36,19 @@ object OSAnalysis {
     val total = websiteLogs.count()
     val withDevices = websiteLogs
       .map(row => getDeviceInfo(row)).toDF("user_id", "device", "browser", "os")
-      .cache()
+        .cache()
     withDevices.show()
 
-    val stats = withDevices.groupBy("os").count()
-      .map(row => (row.getAs[String]("os"),
+    val stats = withDevices.groupBy("browser").count()
+      .map(row => (row.getAs[String]("browser"),
         row.getAs[Long]("count"),
         (row.getAs[Long]("count") / total.toDouble) * 100))
-      .toDF("Operating System", "Users", "% Users")
+      .toDF("Browser", "Users", "% Users")
       .orderBy(desc("Users"))
 
     stats.show()
+
+
     spark.stop()
 
 

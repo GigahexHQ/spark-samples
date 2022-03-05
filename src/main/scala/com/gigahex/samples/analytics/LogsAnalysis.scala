@@ -1,13 +1,11 @@
-package com.gigahex.samples
+package com.gigahex.samples.analytics
 
-import org.apache.commons.logging.LogFactory
-import org.apache.spark.sql.SparkSession
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import java.net.HttpURLConnection
-import java.net.URL
+import java.io.{BufferedReader, InputStreamReader}
+import java.net.{HttpURLConnection, URL}
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import org.apache.commons.logging.LogFactory
+import org.apache.spark.sql.SparkSession
 
 
 object LogsAnalysis {

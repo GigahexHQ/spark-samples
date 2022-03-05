@@ -1,4 +1,5 @@
-package com.gigahex.samples;
+package com.gigahex.samples.analysis;
+
 
 import nl.basjes.parse.useragent.UserAgent;
 import nl.basjes.parse.useragent.UserAgentAnalyzer;
@@ -10,37 +11,21 @@ import org.apache.spark.sql.catalyst.encoders.ExpressionEncoder;
 import org.apache.spark.sql.catalyst.encoders.RowEncoder;
 import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructType;
+import static org.apache.spark.sql.functions.*;
 import scala.Tuple3;
 import scala.Tuple4;
 
-import static org.apache.spark.sql.functions.*;
 import java.io.IOException;
 
+import static org.apache.spark.sql.functions.desc;
 
-public class JDeviceAnalysis {
-
-    static Row getDeviceInfo(Row row) throws IOException {
-        UserAgentAnalyzer uaa = UserAgentAnalyzer
-                .newBuilder()
-                .hideMatcherLoadStats()
-                .withCache(10000)
-                .build();
-        UserAgent.ImmutableUserAgent result = uaa.parse(row.<String>getAs("user_agent"));
-
-
-        return Row.fromTuple(
-                new Tuple4<String, String, String, String>(
-                        row.getAs("user_id"),
-                        result.getValue("DeviceName"),
-                        result.getValue("AgentName"),
-                        result.getValue("OperatingSystemNameVersionMajor")));
-    }
+public class JTimeAnalysis {
 
     public static void main(String[] args) throws Exception {
 
         //Initialize the spark session
         SparkSession spark = SparkSession.builder()
-                .appName("count-device-usage")
+                .appName("usage-by-time")
                 .master("local")
                 .getOrCreate();
 
@@ -52,22 +37,28 @@ public class JDeviceAnalysis {
         ExpressionEncoder<Row> encoder = RowEncoder.apply(structDevice);
 
         StructType statsStruct = new StructType();
-        statsStruct = statsStruct.add("browser", DataTypes.StringType, false);
-        statsStruct = statsStruct.add("users", DataTypes.LongType, false);
+        statsStruct = statsStruct.add("Time Range", DataTypes.StringType, false);
+        statsStruct = statsStruct.add("Users", DataTypes.LongType, false);
         statsStruct = statsStruct.add("% Users", DataTypes.DoubleType, false);
         ExpressionEncoder<Row> encoderStats = RowEncoder.apply(statsStruct);
 
 
         //Create a dataset by reading the input file
-        Dataset<Row> websiteLogs = spark.read().json("/Users/shad/logs_devices.json");
-        Dataset<Row> withDevices = websiteLogs.map((MapFunction<Row, Row>) row -> getDeviceInfo(row), encoder);
 
+        Dataset<Row> websiteLogs = spark.read().json("hdfs://0.0.0.0:9075/user/gigahex/logs_devices.json");
         Long total = websiteLogs.count();
 
-        Dataset<Row> stats = withDevices.groupBy("browser")
+        Dataset<Row> withHours = websiteLogs.withColumn("hour", hour(from_unixtime(col("timestamp")))).cache();
+
+        Dataset<Row> stats =   withHours.withColumn("range",
+                concat(col("hour"),
+                        lit(" to "),
+                        col("hour").plus(1)
+                ))
+                .groupBy("range")
                 .count()
                 .map((MapFunction<Row, Row>) row -> Row.fromTuple(new Tuple3<String, Long, Double>(
-                        row.getAs("browser"),
+                        row.getAs("range"),
                         row.getAs("count"),
                         (row.<Long>getAs("count").doubleValue() / total) * 100)), encoderStats)
                 .orderBy(desc("users"));
